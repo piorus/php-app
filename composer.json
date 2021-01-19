@@ -1,0 +1,19 @@
+{
+    "name": "piotr/wdpai-project",
+    "authors": [
+        {
+            "name": "Piotr Rusin",
+            "email": "piotr@rusin.work"
+        }
+    ],
+    "require": {
+        "symfony/dotenv": "^5.2"
+    },
+    "autoload": {
+        "psr-0": {
+            "": [
+                "src/"
+            ]
+        }
+    }
+}
