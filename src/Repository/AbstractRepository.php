@@ -1,17 +1,26 @@
 <?php
 declare(strict_types=1);
 
+namespace Repository;
+
+use Database\AdapterInterface;
+use Database\Search\SearchCriteriaInterface;
+use Exception\EntityDoesNotExistException;
+use Model\EntityInterface;
+use Service\ConvertArrayToCamelCase;
+use Service\ConvertToCamelCase;
+
 class AbstractRepository implements RepositoryInterface
 {
-    /** @var \Database\AdapterInterface */
-    private $adapter;
+    /** @var AdapterInterface */
+    protected $adapter;
     /** @var string */
-    private $tableName;
+    protected $tableName;
     /** @var string */
-    private $modelClass;
+    protected $modelClass;
 
     public function __construct(
-        \Database\AdapterInterface $adapter,
+        AdapterInterface $adapter,
         string $tableName = '',
         string $modelClass = ''
     )
@@ -23,12 +32,16 @@ class AbstractRepository implements RepositoryInterface
 
     public function get(int $id, array $columns = ['*'])
     {
-        $data = $this->adapter->fetch(
-            $columns,
-            $this->tableName,
-            ['id' => ['eq' => $id]],
-            PDO::FETCH_ASSOC
-        );
+        //@TODO fix
+
+//        $data = $this->adapter->fetch(
+//            $columns,
+//            $this->tableName,
+//            ['id' => ['eq' => $id]],
+//            \PDO::FETCH_ASSOC
+//        );
+
+        $data = null;
 
         if(empty($data)) {
             throw new EntityDoesNotExistException(
@@ -44,17 +57,32 @@ class AbstractRepository implements RepositoryInterface
         return new $this->modelClass($data);
     }
 
-    public function getList(\Database\SearchCriteriaInterface $searchCriteria)
+    /** @return EntityInterface[] */
+    public function getList(SearchCriteriaInterface $searchCriteria) : array
     {
-        // TODO: Implement getList() method.
+        $result = [];
+        $convertArrayToCamelCase = new ConvertArrayToCamelCase();
+        $rows = $convertArrayToCamelCase->execute(
+            $this->adapter->fetchAll(
+                ['*'],
+                $this->tableName,
+                $searchCriteria
+            )
+        );
+
+        foreach($rows as $row) {
+            $result[] = new $this->modelClass($row);
+        }
+
+        return $result;
     }
 
-    public function save(\Model\EntityInterface $entity)
+    public function save(EntityInterface $entity)
     {
-        // TODO: Implement save() method.
+        $this->adapter->insert($entity->getValues(), $this->tableName);
     }
 
-    public function delete(\Model\EntityInterface $entity)
+    public function delete(EntityInterface $entity)
     {
         // TODO: Implement delete() method.
     }

@@ -13,4 +13,20 @@ class AbstractEntity implements EntityInterface
             }
         }
     }
+
+    public function getId(): ?int
+    {
+        return null;
+    }
+
+    public function getValues(): array
+    {
+        $values = [];
+
+        foreach($this as $key => $value) {
+            $values[$key] = $value;
+        }
+
+        return $values;
+    }
 }

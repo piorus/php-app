@@ -1,6 +1,8 @@
 <?php
 declare(strict_types=1);
 
+namespace Repository;
+
 class AuthorRepository extends AbstractRepository
 {
     public function __construct(
