@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Exception;
 
-class EntityDoesNotExistException extends \Exception
+class DatabaseException extends \Exception
 {
+
 }
