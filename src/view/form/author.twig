@@ -1,0 +1,7 @@
+<form action="/author" method="POST">
+    {% if author.id %}<input type="hidden" name="id" value="{{ author.id }}">{% endif %}
+    First Name:<input type="text" name="firstName" value="{{ author.first_name }}">
+    Last Name:<input type="text" name="lastName" value="{{ author.last_name }}">
+    Bio:<textarea name="bio">{{ author.bio }}</textarea>
+    <button>Submit</button>
+</form>

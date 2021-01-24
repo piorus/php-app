@@ -1,0 +1,20 @@
+<form action="/swipe" method="POST" enctype="multipart/form-data">
+    {% if swipe.id %}<input type="hidden" name="id" value="{{ swipe.id }}">{% endif %}
+    Name: <input type=text" name="name">
+
+    Author:
+    <select name="author">
+        {% for author in authors %}
+            <option
+                    value="{{ author.id }}"
+                    {% if swipe.author_id and swipe.author_id == author.id %}
+                    selected
+                    {% endif %}
+            >
+                {{ author.firstName }} {{ author.lastName }}
+            </option>
+        {% endfor %}
+    </select>
+    {% if swipe.image %}<img src="{{ swipe.image }}" class="swipeImage">{% endif %}
+    Image: <input type="file" name="image">
+</form>
