@@ -1,9 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace Controller\Swipe;
+namespace Controller\SwipeComment;
 
-class UpdateSubmit implements \Controller\Action\PostActionInterface
+use Controller\Action\GetActionInterface;
+
+class Create implements GetActionInterface
 {
     public function execute()
     {

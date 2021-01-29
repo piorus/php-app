@@ -35,31 +35,29 @@ class DatabaseAdapter implements AdapterInterface
         );
     }
 
-    private function buildSelectStatement(array $columns, string $table, SearchCriteriaInterface $searchCriteria): \PDOStatement
+    private function buildWhereClause(SearchCriteriaInterface $searchCriteria)
     {
-        $gluedColumns = implode(', ', $columns);
-        $gluedConditions = '';
-        $paramsToBind = [];
-
+        $params = [];
+        $where = '';
         $filterGroupApplied = false;
 
         foreach ($searchCriteria->getFilterGroups() as $filterGroup) {
 
             if ($filterGroupApplied) {
-                $gluedConditions .= " {$filterGroup->getConcatenation()} (";
+                $where .= " {$filterGroup->getConcatenation()} (";
             }
 
             $filterApplied = false;
 
             foreach ($filterGroup->getFilters() as $filter) {
                 if ($filterApplied) {
-                    $gluedConditions .= " {$filter->getConcatenation()} ";
+                    $where .= " {$filter->getConcatenation()} ";
                 }
                 $parameter = ":{$filter->getField()}";
-                $gluedConditions .= "{$filter->getField()} {$filter->getConditionType()} $parameter";
+                $where .= "{$filter->getField()} {$filter->getConditionType()} $parameter";
                 $filterApplied = true;
 
-                $paramsToBind[] = [
+                $params[] = [
                     'parameter' => $parameter,
                     'value' => $filter->getValue(),
                     'dataType' => $this->convertToDataType($filter->getValue())
@@ -67,15 +65,26 @@ class DatabaseAdapter implements AdapterInterface
             }
         }
 
+        return [
+            'where' => $where,
+            'params' => $params
+        ];
+    }
+
+    private function buildSelectStatement(array $columns, string $table, SearchCriteriaInterface $searchCriteria): \PDOStatement
+    {
+        $gluedColumns = implode(', ', $columns);
+        $conditions = $this->buildWhereClause($searchCriteria);
+
         $query = "SELECT $gluedColumns FROM \"$table\"";
 
-        if (strlen($gluedConditions) > 0) {
-            $query .= "WHERE $gluedConditions";
+        if (strlen($conditions['where']) > 0) {
+            $query .= "WHERE {$conditions['where']}";
         }
 
         $statement = $this->pdo->prepare($query);
 
-        foreach ($paramsToBind as $bind) {
+        foreach ($conditions['params'] as $bind) {
             $statement->bindParam($bind['parameter'], $bind['value'], $bind['dataType']);
         }
 
@@ -109,38 +118,94 @@ class DatabaseAdapter implements AdapterInterface
         return $result !== false ? $result : null;
     }
 
-    public function insert(array $columns, string $table)
+    private function prepareColumns(array $columns)
     {
-        $paramsToBind = [];
+        $params = [];
+        $parsedColumns = [];
         $convertToSnakeCase = new ConvertToSnakeCase();
 
-        foreach ($columns as $column => $value) {
-            if(!$value) {
-                unset($columns[$column]);
+        foreach ($columns as $key => $value) {
+            if (!$value) {
+                unset($columns[$key]);
                 continue;
             }
 
-            $paramsToBind[] = [
-                'parameter' => ":$column",
+            $newKey = $convertToSnakeCase->execute($key);
+            $parsedColumns[$newKey] = $value;
+
+            $params[] = [
+                'column' => $newKey,
+                'parameter' => ":$newKey",
                 'value' => $value,
                 'dataType' => $this->convertToDataType($value)
             ];
         }
 
-        $columns = implode(
-            ',',
-            array_map(
-                function ($column) use ($convertToSnakeCase) {
-                    return $column ? $convertToSnakeCase->execute($column) : $column;
-                },
-                array_keys($columns)
-            )
-        );
+        return [
+            'columns' => $parsedColumns,
+            'params' => $params
+        ];
+    }
 
-        $gluedParameters = implode(',', array_column($paramsToBind, 'parameter'));
-        $statement = $this->pdo->prepare("INSERT INTO \"$table\" ($columns) VALUES ($gluedParameters)");
+    public function insert(string $table, array $columns)
+    {
+        $columns = $this->prepareColumns($columns);
+        $gluedColumns = implode(',', array_keys($columns['columns']));
+        $gluedParameters = implode(',', array_column($columns['params'], 'parameter'));
+        $statement = $this->pdo->prepare("INSERT INTO \"$table\" ($gluedColumns) VALUES ($gluedParameters)");
 
-        foreach ($paramsToBind as $bind) {
+        foreach ($columns['params'] as $bind) {
+            $statement->bindParam($bind['parameter'], $bind['value'], $bind['dataType']);
+        }
+
+        $statement->execute();
+    }
+
+    public function update(string $table, SearchCriteriaInterface $searchCriteria, array $columns)
+    {
+        $columns = $this->prepareColumns($columns);
+        $setClauses = [];
+
+        foreach($columns['params'] as $bind) {
+            $setClauses[] = "{$bind['column']} = {$bind['parameter']}";
+        }
+
+        $setClause = implode(', ', $setClauses);
+        $whereClause = $this->buildWhereClause($searchCriteria);
+        $sql = "UPDATE \"$table\" SET $setClause";
+
+        if($whereClause['where']) {
+            $sql .= " WHERE {$whereClause['where']}";
+        }
+
+        var_dump($sql);
+
+        $statement = $this->pdo->prepare($sql);
+
+        foreach ($columns['params'] as $bind) {
+            $statement->bindParam($bind['parameter'], $bind['value'], $bind['dataType']);
+        }
+
+        foreach ($whereClause['params'] as $bind) {
+            $statement->bindParam($bind['parameter'], $bind['value'], $bind['dataType']);
+        }
+
+        $statement->execute();
+
+    }
+
+    public function delete(string $table, SearchCriteriaInterface $searchCriteria)
+    {
+        $whereClause = $this->buildWhereClause($searchCriteria);
+
+        $query = "DELETE FROM \"$table\"";
+        if ($whereClause['where']) {
+            $query .= "WHERE {$whereClause['where']}";
+        }
+
+        $statement = $this->pdo->prepare($query);
+
+        foreach ($whereClause['params'] as $bind) {
             $statement->bindParam($bind['parameter'], $bind['value'], $bind['dataType']);
         }
 

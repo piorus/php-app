@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Database\Search;
 
-class SearchCriteriaBuilder implements \Database\Search\SearchCriteriaInterface
+class SearchCriteriaBuilder
 {
     private $searchCriteria;
     /** @var FilterGroup|null */
@@ -34,7 +34,7 @@ class SearchCriteriaBuilder implements \Database\Search\SearchCriteriaInterface
         return $this;
     }
 
-    public function addFilter(string $field, string $value, string $conditionType = '=') : self
+    public function addFilter(string $field, $value, string $conditionType = '=') : self
     {
         $this->currentFilterGroup->addFilter(
             new Filter($field, $value, $conditionType)

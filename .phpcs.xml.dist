@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<ruleset name="WdPAI Coding standard">
+    <file>./src</file>
+    <arg name="extensions" value="php"/>
+    <exclude-pattern>*.phtml</exclude-pattern>
+    <arg name="colors"/>
+    <arg value="s"/>
+    <rule ref="SlevomatCodingStandard.Namespaces.UnusedUses"/>
+    <rule ref="SlevomatCodingStandard.Classes.UnusedPrivateElements"/>
+</ruleset>

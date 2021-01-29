@@ -1,6 +1,10 @@
 <?php
 declare(strict_types=1);
 
+use Factory\RepositoryFactory;
+use Model\User;
+use Repository\UserRepository;
+
 class Session
 {
     const KEY_ERROR_MESSAGES = 'error_messages';
@@ -31,6 +35,18 @@ class Session
         if(isset($_SESSION[$key])) {
             unset($_SESSION[$key]);
         }
+    }
+
+    public function getUser() : ?User
+    {
+        if(!$this->isLoggedIn()) {
+            return null;
+        }
+
+        /** @var UserRepository $userRepository */
+        $userRepository = RepositoryFactory::create(UserRepository::class);
+
+        return $userRepository->get($this->get(self::KEY_USER_ID));
     }
 
     public function isLoggedIn()

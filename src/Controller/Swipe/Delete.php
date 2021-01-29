@@ -1,23 +1,23 @@
 <?php
 declare(strict_types=1);
 
-namespace Controller\Author;
+namespace Controller\Swipe;
 
 use Controller\AbstractFrontendController;
 use Controller\Action\GetActionInterface;
+use Database\Search\SearchCriteria;
 use Factory\RepositoryFactory;
 use Repository\AuthorRepository;
 
-class Update extends AbstractFrontendController implements GetActionInterface
+class Delete extends AbstractFrontendController implements GetActionInterface
 {
-    protected $template = 'author/update.twig';
+    protected $template = 'swipe/add.twig';
 
     public function execute()
     {
         /** @var AuthorRepository $authorRepository */
         $authorRepository = RepositoryFactory::create(AuthorRepository::class);
-        $author = $authorRepository->get((int)$this->request->get('id'));
-
-        $this->render(['author' => $author]);
+        $authors = $authorRepository->getList(new SearchCriteria());
+        $this->render(['authors' => $authors]);
     }
 }

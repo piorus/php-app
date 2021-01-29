@@ -5,7 +5,6 @@ namespace Model;
 
 class Author extends AbstractEntity
 {
-    protected $id;
     protected $firstName;
     protected $lastName;
     protected $bio;

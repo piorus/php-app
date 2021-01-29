@@ -6,7 +6,7 @@ namespace Controller\Author;
 use Controller\AbstractFrontendController;
 use Controller\Action\GetActionInterface;
 
-class Add extends AbstractFrontendController implements GetActionInterface
+class Create extends AbstractFrontendController implements GetActionInterface
 {
-    protected $template = 'author/add.twig';
+    protected $template = 'author/create.twig';
 }

@@ -42,7 +42,7 @@ class Router
 
     public function getController(): ActionInterface
     {
-        $requestUri = $_SERVER['REQUEST_URI'];
+        $requestUri = strtok($_SERVER['REQUEST_URI'], '?');
         $requestMethod = $_SERVER['REQUEST_METHOD'];
 
         foreach ($this->routes[$requestMethod] as $route) {

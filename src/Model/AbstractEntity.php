@@ -5,6 +5,9 @@ namespace Model;
 
 class AbstractEntity implements EntityInterface
 {
+    /** @var int */
+    protected $id;
+
     public function __construct(array $data)
     {
         foreach($data as $key => $value) {
@@ -12,6 +15,8 @@ class AbstractEntity implements EntityInterface
                 $this->$key = $value;
             }
         }
+
+        $this->id = (int) $this->id;
     }
 
     public function getId(): ?int

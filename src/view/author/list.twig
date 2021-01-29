@@ -1,0 +1,15 @@
+{% extends "layout/layout.twig" %}
+
+{% block content %}
+    {% for author in authors %}
+        <div class="author">
+            <div class="author__name">{{ author.firstName }} {{ author.lastName }}</div>
+            <div class="author__bio">{{ author.bio }}</div>
+            <form action="/author/delete" method="POST">
+                <input type="hidden" name="id" value="{{ author.id }}">
+                <input type="submit" value="Remove"/>
+            </form>
+            <a href="/author/update?id={{ author.id }}">Edit</a>
+        </div>
+    {% endfor %}
+{% endblock %}

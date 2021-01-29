@@ -1,20 +1,27 @@
 {
-    "name": "piotr/wdpai-project",
-    "authors": [
-        {
-            "name": "Piotr Rusin",
-            "email": "piotr@rusin.work"
-        }
-    ],
-    "require": {
-        "symfony/dotenv": "^5.2",
-        "twig/twig": "^3.0"
-    },
-    "autoload": {
-        "psr-0": {
-            "": [
-                "src/"
-            ]
-        }
+  "name": "piotr/wdpai-project",
+  "authors": [
+    {
+      "name": "Piotr Rusin",
+      "email": "piotr@rusin.work"
     }
+  ],
+  "require": {
+    "symfony/dotenv": "^5.2",
+    "twig/twig": "^3.0",
+    "slevomat/coding-standard": "^6.4",
+    "squizlabs/php_codesniffer": "*",
+    "ext-pdo": "*",
+    "symfony/dependency-injection": "^5.2",
+    "symfony/config": "^5.2",
+    "symfony/yaml": "^5.2",
+    "symfony/console": "^5.2"
+  },
+  "autoload": {
+    "psr-0": {
+      "": [
+        "src/"
+      ]
+    }
+  }
 }

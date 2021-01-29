@@ -34,7 +34,7 @@ class Filter implements FilterInterface
         return $this;
     }
 
-    public function getValue(): string
+    public function getValue()
     {
         return $this->value;
     }

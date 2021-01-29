@@ -36,16 +36,26 @@ if(APPLICATION_MODE === 'dev') {
 //$loader->load('services.yaml');
 
 $router = new Router();
+// user endpoints
 $router->registerRoute('/', \Controller\Homepage::class);
 $router->registerRoute('/login', \Controller\User\LoginForm::class);
 $router->registerRoute('/login', \Controller\User\LoginFormSubmit::class);
 $router->registerRoute('/logout', \Controller\User\Logout::class);
 $router->registerRoute('/signup', \Controller\User\Signup::class);
 $router->registerRoute('/signup', \Controller\User\SignupSubmit::class);
-$router->registerRoute('/swipe/add', \Controller\Swipe\Add::class);
-$router->registerRoute('/author/add', \Controller\Author\Add::class);
+// author endpoints
+$router->registerRoute('/author/create', \Controller\Author\Create::class);
+$router->registerRoute('/author/update', \Controller\Author\Update::class);
+$router->registerRoute('/author/delete', \Controller\Author\Delete::class);
 $router->registerRoute('/author', \Controller\Author\FormSubmit::class);
 $router->registerRoute('/authors', \Controller\Author\ViewList::class);
+// swipe endpoints
+$router->registerRoute('/swipe/create', \Controller\Swipe\Create::class);
+$router->registerRoute('/swipe/update', \Controller\Swipe\Update::class);
+$router->registerRoute('/swipe/delete', \Controller\Swipe\Delete::class);
+$router->registerRoute('/swipe', \Controller\Swipe\FormSubmit::class);
+$router->registerRoute('/swipes', \Controller\Swipe\ViewList::class);
+
 $controller = $router->getController();
 $controller->execute();
 

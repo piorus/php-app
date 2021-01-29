@@ -3,9 +3,7 @@ declare(strict_types=1);
 
 namespace Controller\SwipeComment;
 
-use Controller\Action\GetActionInterface;
-
-class Add implements GetActionInterface
+class Delete implements \Controller\Action\PostActionInterface
 {
     public function execute()
     {

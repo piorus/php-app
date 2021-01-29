@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Repository;
 
 use Database\AdapterInterface;
+use Database\Search\SearchCriteriaBuilder;
 use Database\Search\SearchCriteriaInterface;
 use Exception\EntityDoesNotExistException;
 use Model\EntityInterface;
@@ -18,6 +19,8 @@ class AbstractRepository implements RepositoryInterface
     protected $tableName;
     /** @var string */
     protected $modelClass;
+    /** @var array */
+    protected $cache = [];
 
     public function __construct(
         AdapterInterface $adapter,
@@ -32,16 +35,22 @@ class AbstractRepository implements RepositoryInterface
 
     public function get(int $id, array $columns = ['*'])
     {
-        //@TODO fix
+        if(isset($this->cache[$id])) {
+            return $this->cache[$id];
+        }
 
-//        $data = $this->adapter->fetch(
-//            $columns,
-//            $this->tableName,
-//            ['id' => ['eq' => $id]],
-//            \PDO::FETCH_ASSOC
-//        );
-
-        $data = null;
+        $builder = new SearchCriteriaBuilder();
+        $convertArrayToCamelCase = new ConvertArrayToCamelCase();
+        $data = $convertArrayToCamelCase->execute(
+            [
+                $this->adapter->fetch(
+                    ['*'],
+                    $this->tableName,
+                    $builder->addFilter('id', $id)->build()
+                )
+            ]
+        );
+        $data = current($data);
 
         if(empty($data)) {
             throw new EntityDoesNotExistException(
@@ -54,7 +63,9 @@ class AbstractRepository implements RepositoryInterface
             );
         }
 
-        return new $this->modelClass($data);
+        $this->cache[$id] = new $this->modelClass($data);
+
+        return $this->cache[$id];
     }
 
     /** @return EntityInterface[] */
@@ -79,7 +90,15 @@ class AbstractRepository implements RepositoryInterface
 
     public function save(EntityInterface $entity)
     {
-        $this->adapter->insert($entity->getValues(), $this->tableName);
+        if($entity->getId()) {
+            $builder = new SearchCriteriaBuilder();
+            $this->adapter->update(
+                $this->tableName,
+                $builder->addFilter('id', $entity->getId())->build(),
+                $entity->getValues());
+        } else {
+            $this->adapter->insert($this->tableName, $entity->getValues());
+        }
     }
 
     public function delete(EntityInterface $entity)
@@ -89,6 +108,11 @@ class AbstractRepository implements RepositoryInterface
 
     public function deleteById(int $id)
     {
-        // TODO: Implement deleteById() method.
+        $builder = new SearchCriteriaBuilder();
+
+        $this->adapter->delete(
+            $this->tableName,
+            $builder->addFilter('id', $id)->build()
+        );
     }
 }

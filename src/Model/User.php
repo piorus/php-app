@@ -11,8 +11,6 @@ class User extends AbstractEntity
     const PASSWORD = 'password';
     const ROLE = 'role';
 
-    /** @var int */
-    protected $id;
     /** @var string */
     protected $nickname;
     /** @var string */

@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 namespace Model;
 
-class Swipe
+class Swipe extends AbstractEntity
 {
-
+    protected $name;
+    protected $authorId;
+    protected $image;
 }
