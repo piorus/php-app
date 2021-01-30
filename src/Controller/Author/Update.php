@@ -3,21 +3,15 @@ declare(strict_types=1);
 
 namespace Controller\Author;
 
-use Controller\AbstractFrontendController;
-use Controller\Action\GetActionInterface;
-use Factory\RepositoryFactory;
+use Controller\Action\AbstractUpdateController;
+use Model\Author;
 use Repository\AuthorRepository;
 
-class Update extends AbstractFrontendController implements GetActionInterface
+class Update extends AbstractUpdateController
 {
+    const REQUIRE_LOGGED_IN_ADMIN_USER = true;
+
     protected $template = 'author/update.twig';
-
-    public function execute()
-    {
-        /** @var AuthorRepository $authorRepository */
-        $authorRepository = RepositoryFactory::create(AuthorRepository::class);
-        $author = $authorRepository->get((int)$this->request->get('id'));
-
-        $this->render(['author' => $author]);
-    }
+    protected $repositoryClass = AuthorRepository::class;
+    protected $entity = Author::ENTITY;
 }

@@ -178,8 +178,6 @@ class DatabaseAdapter implements AdapterInterface
             $sql .= " WHERE {$whereClause['where']}";
         }
 
-        var_dump($sql);
-
         $statement = $this->pdo->prepare($sql);
 
         foreach ($columns['params'] as $bind) {

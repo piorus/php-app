@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Controller\User;
 
-use Controller\AbstractFrontendController;
+use Controller\Action\AbstractFrontendController;
 use Controller\Action\GetActionInterface;
 
 class Logout extends AbstractFrontendController implements GetActionInterface

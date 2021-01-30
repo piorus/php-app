@@ -1,0 +1,8 @@
+.content {
+    max-width: 400px;
+}
+
+body {
+    display: flex;
+    align-items: center;
+}

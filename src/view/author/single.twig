@@ -1,0 +1,15 @@
+{% extends "layout/layout.twig" %}
+
+{% block content %}
+    {% include 'single/author.twig' %}
+    <div class="comments">
+        {% for comment in comments %}
+            <div class="comment">
+                <p class="comment__userNickname">{{ comment.user.nickname }}</p>
+                <p class="comment__comment">{{ comment.comment }}</p>
+            </div>
+        {% endfor %}
+        <textarea id="comment"></textarea>
+        <input type="button" value="Add Comment">
+    </div>
+{% endblock %}

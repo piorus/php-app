@@ -5,6 +5,8 @@ namespace Model;
 
 class Author extends AbstractEntity
 {
+    const ENTITY = 'author';
+
     protected $firstName;
     protected $lastName;
     protected $bio;

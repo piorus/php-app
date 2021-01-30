@@ -1,21 +1,27 @@
 <form action="/swipe" method="POST" enctype="multipart/form-data">
     {% if swipe.id %}<input type="hidden" name="id" value="{{ swipe.id }}">{% endif %}
-    Name: <input type=text" name="name">
+    <label for="inputName" class="visually-hidden">Name</label>
+    <input id="inputName" class="form-control" name="name" placeholder="Name" required="required" autofocus="">
 
-    Author:
-    <select name="authorId">
-        {% for author in authors %}
-            <option
-                    value="{{ author.id }}"
-                    {% if swipe.author_id and swipe.author_id == author.id %}
-                    selected
-                    {% endif %}
-            >
-                {{ author.firstName }} {{ author.lastName }}
-            </option>
-        {% endfor %}
-    </select>
+    <label for="inputAuthor" class="visually-hidden">Author</label>
+    <div style="display: flex">
+        <select name="authorId" id="inputAuthor" class="form-control">
+            <option>Select Author...</option>
+            {% for author in authors %}
+                <option
+                        value="{{ author.id }}"
+                        {% if swipe.author_id and swipe.author_id == author.id %}
+                            selected
+                        {% endif %}
+                >
+                    {{ author.firstName }} {{ author.lastName }}
+                </option>
+            {% endfor %}
+        </select>
+        <a href="/author/create" class="w-50">create new author</a>
+    </div>
     {% if swipe.image %}<img src="{{ swipe.image }}" class="swipeImage">{% endif %}
-    Image: <input type="file" name="image">
-    <button>Submit</button>
+    <label for="inputFile" class="visually-hidden">File</label>
+    <input type="file" id="inputFile" name="file" class="form-control">
+    <button class="w-25 btn btn-lg btn-primary" type="submit">Submit</button>
 </form>

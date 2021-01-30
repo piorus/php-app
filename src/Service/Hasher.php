@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Service;
 
-class PasswordManager
+class Hasher
 {
     public function hash(string $password) : string
     {
@@ -13,5 +13,10 @@ class PasswordManager
     public function verify(string $password, string $hash) : bool
     {
         return password_verify($password, $hash);
+    }
+
+    public function randomHash() : string
+    {
+        return hash('sha256', random_bytes(256));
     }
 }

@@ -5,9 +5,11 @@ namespace Repository;
 
 use Database\AdapterInterface;
 use Database\Search\SearchCriteriaBuilder;
+use Exception\UserAlreadyExistException;
 use Exception\UserNicknameIsAlreadyInUseException;
 use Factory\ServiceFactory;
 use Model\User;
+use Service\Hasher;
 
 class UserRepository extends AbstractRepository
 {
@@ -49,35 +51,31 @@ class UserRepository extends AbstractRepository
     public function create(string $nickname, string $email, string $password)
     {
         $builder = new SearchCriteriaBuilder();
-
         $user = $this->getUserByEmail($email);
-
         if ($user) {
-            throw new \Exception\UserAlreadyExistException('User with that e-mail address already exists.');
+            throw new UserAlreadyExistException('User with that e-mail address already exists.');
         }
 
         $user = $this->getUserByNickname($nickname);
-
         if ($user) {
             throw new UserNicknameIsAlreadyInUseException('This nickname was already taken.');
         }
 
-
-        /** @var \Service\PasswordManager $passwordManager */
-        $passwordManager = (new ServiceFactory())->create('password_manager');
+        /** @var Hasher $hasher */
+        $hasher = new Hasher();
 
         $this->adapter->insert(
+            $this->tableName,
             [
                 'nickname' => $nickname,
                 'email' => $email,
-                'password' => $passwordManager->hash($password),
+                'password' => $hasher->hash($password),
                 'role' => 'USER'
             ],
-            $this->tableName
         );
 
         $data = $this->adapter->fetch(
-            [User::ID],
+            [User::COLUMN_ID],
             $this->tableName,
             $builder
                 ->addFilter('email', $email)
@@ -85,6 +83,6 @@ class UserRepository extends AbstractRepository
                 ->build()
         );
 
-        return $data[User::ID];
+        return $data[User::COLUMN_ID];
     }
 }

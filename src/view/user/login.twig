@@ -1,8 +1,10 @@
-<html>
-<head>Login</head>
-<body>
-{% include "layout/errors.twig" %}
-{% include 'form/login.twig' %}
-<p>No account? <a href="/signup">SIGN UP</a></p>
-</body>
-</html>
+{% extends "layout/baseLayout.twig" %}
+
+{% block content %}
+        {% include 'form/login.twig' %}
+        <p>No account? <a href="/signup">Sign Up</a></p>
+{% endblock %}
+
+{% block styles %}
+    <link rel="stylesheet" href="/assets/css/user/login.css">
+{% endblock %}

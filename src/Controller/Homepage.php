@@ -3,20 +3,8 @@ declare(strict_types=1);
 
 namespace Controller;
 
-use Controller\Action\GetActionInterface;
-use Factory\RepositoryFactory;
-use Repository\SwipeRepository;
+use Controller\Swipe\ViewList;
 
-class Homepage extends AbstractFrontendController implements GetActionInterface
+class Homepage extends ViewList
 {
-    protected $template = 'homepage.twig';
-
-    public function execute()
-    {
-        if(!$this->session->isLoggedIn()) {
-            $this->redirect('/login');
-        }
-
-        $this->render([]);
-    }
 }

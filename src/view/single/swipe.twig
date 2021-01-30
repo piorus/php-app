@@ -1,0 +1,20 @@
+<div class="swipe" data-id="{{ swipe.getId() }}">
+    <h1 class="swipe__name">{{ swipe.name }}</h1>
+    <h5>By</h5>
+    <h3 class="swipe__author">{{ swipe.author.firstName }} {{ swipe.author.lastName }}</h3>
+    {% if isSingle %}
+        <div class="swipe__image"><img src="{{ swipe.fileUrl }}"></div>
+    {% endif %}
+    {% if isAdmin %}
+        <form action="/swipe/delete" method="POST">
+            <input type="hidden" name="id" value="{{ swipe.getId() }}">
+        </form>
+    {% endif %}
+    <div class="actions">
+        {% if not isSingle %}<a href="/swipe?id={{ swipe.getId() }}">View</a>{% endif %}
+        {% if isAdmin %}
+            <a href="/swipe/update?id={{ swipe.getId() }}">Edit</a>
+            <a href="#" class="submit">Delete</a>
+        {% endif %}
+    </div>
+</div>

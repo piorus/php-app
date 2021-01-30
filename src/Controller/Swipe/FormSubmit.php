@@ -3,21 +3,41 @@ declare(strict_types=1);
 
 namespace Controller\Swipe;
 
-use Controller\AbstractBackendController;
-use Controller\Action\PostActionInterface;
-use Factory\RepositoryFactory;
-use Model\Author;
+use Controller\Action\AbstractFormSubmitController;
+use Exception\FileUploadException;
+use Model\EntityInterface;
 use Model\Swipe;
-use Repository\AuthorRepository;
+use Repository\SwipeRepository;
+use Service\ConvertFilePathToUrl;
+use Service\FileUpload;
 
-class FormSubmit extends AbstractBackendController implements PostActionInterface
+class FormSubmit extends AbstractFormSubmitController
 {
-    public function execute()
+    const UPLOAD_DIR = 'swipes';
+
+    /** @var string|null */
+    protected $entityClass = Swipe::class;
+    /** @var string|null */
+    protected $repositoryClass = SwipeRepository::class;
+    /** @var string */
+    protected $redirectPath = '/swipes';
+
+    /** @var Swipe $entity */
+    public function beforeSave(EntityInterface $swipe)
     {
-        $swipe = new Swipe($this->request->getAll());
-        /** @var AuthorRepository $authorRepository */
-        $authorRepository = RepositoryFactory::create(AuthorRepository::class);
-        $authorRepository->save($author);
-        $this->redirect('/authors');
+        $uploader = new FileUpload();
+
+        try {
+            $filePath = $uploader->execute(
+                $this->request->getFile('file'),
+                self::UPLOAD_DIR
+            );
+        } catch (FileUploadException $e) {
+            $this->session->addErrorMessage($e->getMessage());
+            $this->redirect($this->redirectPath);
+        }
+
+        $pathConverter = new ConvertFilePathToUrl();
+        $swipe->setFileUrl("/{$pathConverter->execute($filePath)}");
     }
 }

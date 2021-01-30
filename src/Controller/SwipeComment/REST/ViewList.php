@@ -1,12 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace Controller\SwipeComment;
+namespace Controller\SwipeComment\REST;
 
-use Controller\Action\GetActionInterface;
-
-class Create implements GetActionInterface
+class ViewList implements \Controller\Action\GetActionInterface
 {
+
     public function execute()
     {
         // TODO: Implement execute() method.

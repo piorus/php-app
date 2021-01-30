@@ -3,22 +3,15 @@ declare(strict_types=1);
 
 namespace Controller\Author;
 
-use Controller\AbstractFrontendController;
-use Controller\Action\GetActionInterface;
-use Database\Search\SearchCriteria;
-use Factory\RepositoryFactory;
+use Controller\Action\AbstractViewListController;
+use Model\Author;
 use Repository\AuthorRepository;
 
-class ViewList extends AbstractFrontendController implements GetActionInterface
+class ViewList extends AbstractViewListController
 {
     protected $template = 'author/list.twig';
-
-    public function execute()
-    {
-        /** @var AuthorRepository $authorRepository */
-        $authorRepository = RepositoryFactory::create(AuthorRepository::class);
-        $authors = $authorRepository->getList(new SearchCriteria());
-
-        $this->render(['authors' => $authors]);
-    }
+    /** @var string|null */
+    protected $repositoryClass = AuthorRepository::class;
+    /** @var string|null */
+    protected $entity = Author::ENTITY;
 }

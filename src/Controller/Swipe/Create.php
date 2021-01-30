@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Controller\Swipe;
 
-use Controller\AbstractFrontendController;
+use Controller\Action\AbstractFrontendController;
 use Controller\Action\GetActionInterface;
 use Database\Search\SearchCriteria;
 use Factory\RepositoryFactory;
@@ -11,13 +11,18 @@ use Repository\AuthorRepository;
 
 class Create extends AbstractFrontendController implements GetActionInterface
 {
-    protected $template = 'swipe/add.twig';
+    public const REQUIRE_LOGGED_IN_ADMIN_USER = true;
 
-    public function execute()
+    protected $template = 'swipe/create.twig';
+
+    public function getTemplateData(): array
     {
+        $templateData = parent::getTemplateData();
+
         /** @var AuthorRepository $authorRepository */
         $authorRepository = RepositoryFactory::create(AuthorRepository::class);
-        $authors = $authorRepository->getList(new SearchCriteria());
-        $this->render(['authors' => $authors]);
+        $templateData['authors'] = $authorRepository->getList(new SearchCriteria());
+
+        return $templateData;
     }
 }

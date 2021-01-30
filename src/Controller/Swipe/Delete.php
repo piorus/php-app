@@ -3,21 +3,15 @@ declare(strict_types=1);
 
 namespace Controller\Swipe;
 
-use Controller\AbstractFrontendController;
-use Controller\Action\GetActionInterface;
-use Database\Search\SearchCriteria;
-use Factory\RepositoryFactory;
-use Repository\AuthorRepository;
+use Controller\Action\AbstractDeleteController;
+use Repository\SwipeRepository;
 
-class Delete extends AbstractFrontendController implements GetActionInterface
+class Delete extends AbstractDeleteController
 {
-    protected $template = 'swipe/add.twig';
+    const REQUIRE_LOGGED_IN_ADMIN_USER = true;
 
-    public function execute()
-    {
-        /** @var AuthorRepository $authorRepository */
-        $authorRepository = RepositoryFactory::create(AuthorRepository::class);
-        $authors = $authorRepository->getList(new SearchCriteria());
-        $this->render(['authors' => $authors]);
-    }
+    /** @var string|null */
+    protected $repositoryClass = SwipeRepository::class;
+    /** @var string|null */
+    protected $redirectPath = '/';
 }

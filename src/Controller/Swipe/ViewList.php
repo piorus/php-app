@@ -3,22 +3,15 @@ declare(strict_types=1);
 
 namespace Controller\Swipe;
 
-use Controller\AbstractFrontendController;
-use Controller\Action\GetActionInterface;
-use Database\Search\SearchCriteria;
-use Factory\RepositoryFactory;
-use Repository\AuthorRepository;
+use Controller\Action\AbstractViewListController;
+use Model\Swipe;
+use Repository\SwipeRepository;
 
-class ViewList extends AbstractFrontendController implements GetActionInterface
+class ViewList extends AbstractViewListController
 {
-    protected $template = 'author/list.twig';
-
-    public function execute()
-    {
-        /** @var AuthorRepository $authorRepository */
-        $authorRepository = RepositoryFactory::create(AuthorRepository::class);
-        $authors = $authorRepository->getList(new SearchCriteria());
-
-        $this->render(['authors' => $authors]);
-    }
+    protected $template = 'swipe/list.twig';
+    /** @var string|null */
+    protected $repositoryClass = SwipeRepository::class;
+    /** @var string|null */
+    protected $entity = Swipe::ENTITY;
 }

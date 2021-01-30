@@ -1,9 +1,6 @@
 <?php
 declare(strict_types=1);
 
-use Symfony\Component\Config\FileLocator;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\Dotenv\Dotenv;
 
 define('PUB_DIR', dirname(__FILE__) . DIRECTORY_SEPARATOR);
@@ -31,10 +28,6 @@ if(APPLICATION_MODE === 'dev') {
     ini_set('display_errors', 'On');
 }
 
-//$containerBuilder = new ContainerBuilder();
-//$loader = new YamlFileLoader($containerBuilder, new FileLocator(CONFIG_DIR));
-//$loader->load('services.yaml');
-
 $router = new Router();
 // user endpoints
 $router->registerRoute('/', \Controller\Homepage::class);
@@ -44,17 +37,11 @@ $router->registerRoute('/logout', \Controller\User\Logout::class);
 $router->registerRoute('/signup', \Controller\User\Signup::class);
 $router->registerRoute('/signup', \Controller\User\SignupSubmit::class);
 // author endpoints
-$router->registerRoute('/author/create', \Controller\Author\Create::class);
-$router->registerRoute('/author/update', \Controller\Author\Update::class);
-$router->registerRoute('/author/delete', \Controller\Author\Delete::class);
-$router->registerRoute('/author', \Controller\Author\FormSubmit::class);
-$router->registerRoute('/authors', \Controller\Author\ViewList::class);
+$router->registerCRUDRoutes(\Model\Author::ENTITY, 'Controller\Author');
 // swipe endpoints
-$router->registerRoute('/swipe/create', \Controller\Swipe\Create::class);
-$router->registerRoute('/swipe/update', \Controller\Swipe\Update::class);
-$router->registerRoute('/swipe/delete', \Controller\Swipe\Delete::class);
-$router->registerRoute('/swipe', \Controller\Swipe\FormSubmit::class);
-$router->registerRoute('/swipes', \Controller\Swipe\ViewList::class);
+$router->registerCRUDRoutes(\Model\Swipe::ENTITY, 'Controller\Swipe');
+$router->registerRoute('/swipe/comment/create', \Controller\SwipeComment\REST\Create::class);
+$router->registerRoute('/swipe/comment/delete', \Controller\SwipeComment\REST\Delete::class);
 
 $controller = $router->getController();
 $controller->execute();

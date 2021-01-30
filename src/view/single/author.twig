@@ -1,0 +1,16 @@
+<div class="author">
+    <h1 class="author__name">{{ author.firstName }} {{ author.lastName }}</h1>
+    <p class="author__bio">{{ author.bio }}</p>
+    {% if isAdmin %}
+        <form action="/author/delete" method="POST">
+            <input type="hidden" name="id" value="{{ author.id }}">
+        </form>
+    {% endif %}
+    <div class="actions">
+        <a href="/author?id={{ author.getId() }}">View</a>
+        {% if isAdmin %}
+            <a href="/author/update?id={{ author.getId() }}">Edit</a>
+            <a href="#" class="submit">Delete</a>
+        {% endif %}
+    </div>
+</div>

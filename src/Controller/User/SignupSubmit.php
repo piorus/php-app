@@ -3,16 +3,15 @@ declare(strict_types=1);
 
 namespace Controller\User;
 
-use Controller\AbstractFrontendController;
-use Controller\Action\PostActionInterface;
+use Controller\Action\AbstractBackendController;
 use Exception\UserAlreadyExistException;
 use Exception\UserNicknameIsAlreadyInUseException;
 use Factory\RepositoryFactory;
 use Repository\UserRepository;
 
-class SignupSubmit extends AbstractFrontendController implements PostActionInterface
+class SignupSubmit extends AbstractBackendController
 {
-    public function execute()
+    public function executeBackendAction()
     {
         /** @var UserRepository $userRepository */
         $userRepository = RepositoryFactory::create(UserRepository::class);

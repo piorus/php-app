@@ -3,15 +3,14 @@ declare(strict_types=1);
 
 namespace Controller\User;
 
-use Controller\AbstractBackendController;
-use Controller\Action\PostActionInterface;
+use Controller\Action\AbstractBackendController;
 use Factory\RepositoryFactory;
-use Factory\ServiceFactory;
 use Repository\UserRepository;
+use Service\Hasher;
 
-class LoginFormSubmit extends AbstractBackendController implements PostActionInterface
+class LoginFormSubmit extends AbstractBackendController
 {
-    public function execute()
+    protected function executeBackendAction()
     {
         $rawEmail = $_POST['email'] ?? '';
         $rawPassword = $_POST['password'] ?? '';
@@ -20,8 +19,8 @@ class LoginFormSubmit extends AbstractBackendController implements PostActionInt
         $userRepository = RepositoryFactory::create(UserRepository::class);
         $user = $userRepository->getUserByEmail($rawEmail);
 
-        /** @var \Service\PasswordManager $passwordManager */
-        $passwordManager = (new ServiceFactory())->create('password_manager');
+        /** @var Hasher $hasher */
+        $hasher = new Hasher();
 
         if (!$user) {
             $this->session->addErrorMessage('Incorrect username and/or password.');
@@ -29,7 +28,7 @@ class LoginFormSubmit extends AbstractBackendController implements PostActionInt
         }
 
 
-        if (!$passwordManager->verify($rawPassword, $user->getPassword())) {
+        if (!$hasher->verify($rawPassword, $user->getPassword())) {
             $this->session->addErrorMessage('Wrong password.');
             $this->redirect('/login');
         }

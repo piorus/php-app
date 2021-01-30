@@ -25,4 +25,9 @@ class Request
     {
         return $this->data;
     }
+
+    public function getFile(string $name) : ?array
+    {
+        return $_FILES[$name] ?? null;
+    }
 }

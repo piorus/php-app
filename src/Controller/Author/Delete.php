@@ -3,25 +3,14 @@ declare(strict_types=1);
 
 namespace Controller\Author;
 
-use Controller\AbstractBackendController;
-use Controller\Action\PostActionInterface;
-use Factory\RepositoryFactory;
+use Controller\Action\AbstractDeleteController;
 use Repository\AuthorRepository;
-use Validator\AdminValidator;
 
-class Delete extends AbstractBackendController implements PostActionInterface
+class Delete extends AbstractDeleteController
 {
-    public function execute()
-    {
-        $adminValidator = new AdminValidator();
-        if(!$adminValidator->validate($this->session)) {
-            $this->session->addErrorMessage('Sneaky, but you are not an admin :(');
-            $this->redirect('/');
-        }
-
-        /** @var AuthorRepository $authorRepository */
-        $authorRepository = RepositoryFactory::create(AuthorRepository::class);
-        $authorRepository->deleteById((int) $this->request->get('id'));
-        $this->redirect('/authors');
-    }
+    const REQUIRE_LOGGED_IN_ADMIN_USER = true;
+    /** @var string|null */
+    protected $repositoryClass = AuthorRepository::class;
+    /** @var string|null */
+    protected $redirectPath = '/authors';
 }

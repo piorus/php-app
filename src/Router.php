@@ -40,6 +40,16 @@ class Router
         }
     }
 
+    public function registerCRUDRoutes(string $entity, string $namespace)
+    {
+        $this->registerRoute("/$entity/create", "$namespace\Create");
+        $this->registerRoute("/$entity/update", "$namespace\Update");
+        $this->registerRoute("/$entity/delete", "$namespace\Delete");
+        $this->registerRoute("/$entity", "$namespace\FormSubmit");
+        $this->registerRoute("/$entity", "$namespace\ViewSingle");
+        $this->registerRoute("/{$entity}s", "$namespace\ViewList");
+    }
+
     public function getController(): ActionInterface
     {
         $requestUri = strtok($_SERVER['REQUEST_URI'], '?');

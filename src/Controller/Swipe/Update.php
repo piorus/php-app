@@ -3,11 +3,15 @@ declare(strict_types=1);
 
 namespace Controller\Swipe;
 
-class Update implements \Controller\Action\GetActionInterface
-{
+use Controller\Action\AbstractUpdateController;
+use Model\Swipe;
+use Repository\SwipeRepository;
 
-    public function execute()
-    {
-        // TODO: Implement execute() method.
-    }
+class Update extends AbstractUpdateController
+{
+    const REQUIRE_LOGGED_IN_ADMIN_USER = true;
+
+    protected $template = 'swipe/update.twig';
+    protected $repositoryClass = SwipeRepository::class;
+    protected $entity = Swipe::ENTITY;
 }
