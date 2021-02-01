@@ -14,7 +14,7 @@
             {% for author in authors %}
                 <option
                         value="{{ author.id }}"
-                        {% if swipe.authorId == author.id %}
+                        {% if swipe.author.id == author.id %}
                             selected
                         {% endif %}
                 >
@@ -31,7 +31,7 @@
     {% endif %}
     <div class="form-field file-input">
         <label for="inputFile" class="visually-hidden">File</label>
-        <input type="file" id="inputFile" name="file" class="form-control" required>
+        <input type="file" id="inputFile" name="file" class="form-control" {% if not swipe.id %}required{% endif %}>
         <div class="invalid-feedback">
             Please select a file.
         </div>

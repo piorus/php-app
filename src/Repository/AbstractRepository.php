@@ -59,7 +59,7 @@ class AbstractRepository implements RepositoryInterface
             );
         }
 
-        $this->cache[$id] = EntityFactory::create($data);
+        $this->cache[$id] = EntityFactory::create($this->entityClass, $data);
 
         return $this->cache[$id];
     }
@@ -78,7 +78,7 @@ class AbstractRepository implements RepositoryInterface
         );
 
         foreach($rows as $row) {
-            $result[] = EntityFactory::create($row);
+            $result[] = EntityFactory::create($this->entityClass, $row);
         }
 
         return $result;

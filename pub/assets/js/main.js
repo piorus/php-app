@@ -1,4 +1,4 @@
 $('.delete').on('click', function(e){
     e.preventDefault();
-    $('#deleteForm').submit();
+    $(this).closest('.actions').find('.deleteForm').submit();
 });
