@@ -31,8 +31,8 @@ if(APPLICATION_MODE === 'dev') {
 $router = new Router();
 // user endpoints
 $router->registerRoute('/', \Controller\Homepage::class);
-$router->registerRoute('/login', \Controller\User\LoginForm::class);
-$router->registerRoute('/login', \Controller\User\LoginFormSubmit::class);
+$router->registerRoute('/login', \Controller\User\Login::class);
+$router->registerRoute('/login', \Controller\User\LoginSubmit::class);
 $router->registerRoute('/logout', \Controller\User\Logout::class);
 $router->registerRoute('/signup', \Controller\User\Signup::class);
 $router->registerRoute('/signup', \Controller\User\SignupSubmit::class);

@@ -24,3 +24,8 @@
 .comment__comment {
     text-align: left;
 }
+
+.spinner-border {
+    width: 2rem;
+    height: 2rem;
+}
