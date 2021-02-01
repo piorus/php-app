@@ -1,0 +1,11 @@
+<div class="comment" data-id="{{ comment.id }}">
+    <div class="comment__content">
+        <div class="comment__userNickname"><b>{{ comment.user.nickname }}</b> says:</div>
+        <div class="comment__comment">{{ comment.getComment() }}</div>
+    </div>
+    {% if comment.getId() == loggedInUserId or isAdmin %}
+        <div class="comment__actions">
+            <a href="#" class="deleteComment">Delete</a>
+        </div>
+    {% endif %}
+</div>

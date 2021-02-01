@@ -1,0 +1,18 @@
+<div class="comments">
+    {% for comment in comments %}
+        {% include 'swipecomment/swipecomment.twig' %}
+    {% endfor %}
+</div>
+<div class="comments__actions">
+    <form novalidate class="needs-validation">
+        <div class="form-field">
+            <label for="comment" class="visually-hidden">Comment</label>
+            <textarea id="comment" class="form-control" placeholder="Comment" required></textarea>
+            <div class="invalid-feedback">
+                Comment is missing.
+            </div>
+        </div>
+
+        <button class="w-50 btn btn-lg btn-primary" type="submit" id="addComment">Add Comment</button>
+    </form>
+</div>

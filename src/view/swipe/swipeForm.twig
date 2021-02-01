@@ -1,0 +1,40 @@
+<form action="/swipe" method="POST" enctype="multipart/form-data" class="needs-validation swipe-form" novalidate>
+    {% if swipe.id %}<input type="hidden" name="id" value="{{ swipe.id }}">{% endif %}
+    <div class="form-field">
+        <label for="inputName" class="visually-hidden">Name</label>
+        <input id="inputName" class="form-control" name="name" placeholder="Name" required="required" autofocus="" value="{{ swipe.name }}">
+        <div class="invalid-feedback">
+            Name is missing.
+        </div>
+    </div>
+    <div class="form-field">
+        <label for="inputAuthor" class="visually-hidden">Author</label>
+        <select name="authorId" id="inputAuthor" class="form-control form-select" required>
+            <option selected disabled value="">Select Author...</option>
+            {% for author in authors %}
+                <option
+                        value="{{ author.id }}"
+                        {% if swipe.authorId == author.id %}
+                            selected
+                        {% endif %}
+                >
+                    {{ author.firstName }} {{ author.lastName }}
+                </option>
+            {% endfor %}
+        </select>
+        <div class="invalid-feedback">
+            Please select an author.
+        </div>
+    </div>
+    {% if swipe.fileUrl %}
+        <img src="{{ swipe.fileUrl }}" class="swipeImage" style="max-width: 100%;">
+    {% endif %}
+    <div class="form-field file-input">
+        <label for="inputFile" class="visually-hidden">File</label>
+        <input type="file" id="inputFile" name="file" class="form-control" required>
+        <div class="invalid-feedback">
+            Please select a file.
+        </div>
+    </div>
+    <button class="w-25 btn btn-lg btn-primary" type="submit">Submit</button>
+</form>

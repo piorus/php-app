@@ -1,0 +1,16 @@
+{% extends "layout/layout.twig" %}
+
+{% block content %}
+    {% include 'swipe/swipe.twig' %}
+    {% include 'swipecomment/swipecomments.twig' %}
+{% endblock %}
+
+{% block styles %}
+    <link rel="stylesheet" href="/assets/css/swipe/swipe.css">
+    <link rel="stylesheet" href="/assets/css/form.css">
+{% endblock %}
+
+{% block scripts %}
+    <script src="/assets/js/swipe.js" type="text/javascript"></script>
+    <script src="/assets/js/form.js" type="text/javascript"></script>
+{% endblock %}

@@ -9,5 +9,15 @@ use Controller\Action\GetActionInterface;
 class LoginForm extends AbstractFrontendController implements GetActionInterface
 {
     const REQUIRE_LOGGED_IN_USER = false;
-    protected $template = 'user/login.twig';
+
+    protected string $template = 'user/layout/login.twig';
+
+    public function execute()
+    {
+        if($this->session->isLoggedIn()) {
+            $this->redirect('/');
+        }
+
+        parent::execute();
+    }
 }

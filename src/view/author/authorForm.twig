@@ -1,0 +1,24 @@
+<form action="/author" method="POST" class="needs-validation" novalidate>
+    {% if author.id %}<input type="hidden" name="id" value="{{ author.id }}">{% endif %}
+    <div class="form-field">
+        <label for="inputFirstName" class="visually-hidden">First Name</label>
+        <input id="inputFirstName" class="form-control" name="firstName" placeholder="First Name" required value="{{ author.firstName }}">
+        <div class="invalid-feedback">
+            First name is missing.
+        </div>
+    </div>
+    <div class="form-field">
+        <label for="inputLastName" class="visually-hidden">Last Name</label>
+        <input id="inputLastName" class="form-control" name="lastName" placeholder="Last Name" required value="{{ author.lastName }}">
+        <div class="invalid-feedback">
+            Last name is missing.
+        </div>
+    </div>
+    <div class="form-field">
+        <textarea name="bio" class="form-control" placeholder="Bio" required>{{ author.bio }}</textarea>
+        <div class="invalid-feedback">
+            Bio is missing.
+        </div>
+    </div>
+    <button class="w-25 btn btn-lg btn-primary" type="submit">Submit</button>
+</form>

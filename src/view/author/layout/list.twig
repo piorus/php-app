@@ -1,0 +1,18 @@
+{% extends "layout/layout.twig" %}
+
+{% block navigation %}
+    {% if isAdmin %}<a href="/author/create">add new author</a>{% endif %}
+{% endblock %}
+
+{% block content %}
+    {% if not authors|length %}
+        <p class="notice">No authors found.</p>
+    {% endif %}
+    {% for author in authors %}
+        {% include 'author/author.twig' %}
+    {% endfor %}
+{% endblock %}
+
+{% block styles %}
+    <link rel="stylesheet" href="/assets/css/author/author.css">
+{% endblock %}

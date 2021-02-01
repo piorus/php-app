@@ -1,0 +1,19 @@
+{% extends "layout/layout.twig" %}
+
+{% block navigation %}
+    <a href="/author/create" class="center create-new-author">add new author</a>
+{% endblock %}
+
+{% block content %}
+    <h1>Add New Swipe</h1>
+    {% include "swipe/swipeForm.twig" %}
+{% endblock %}
+
+{% block styles %}
+    <link rel="stylesheet" href="/assets/css/swipe/swipeForm.css">
+    <link rel="stylesheet" href="/assets/css/form.css">
+{% endblock %}
+
+{% block scripts %}
+    <script src="/assets/js/form.js" type="text/javascript"></script>
+{% endblock %}

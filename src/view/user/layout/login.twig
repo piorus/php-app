@@ -1,0 +1,10 @@
+{% extends "layout/baseLayout.twig" %}
+
+{% block content %}
+        {% include 'user/loginForm.twig' %}
+        <div class="signUp">No account? <a href="/signup">Sign Up</a></div>
+{% endblock %}
+
+{% block styles %}
+    <link rel="stylesheet" href="/assets/css/user/login.css">
+{% endblock %}

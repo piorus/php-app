@@ -1,0 +1,14 @@
+{% extends "layout/layout.twig" %}
+
+{% block navigation %}
+    {% if isAdmin %}<a href="/swipe/create">add new swipe</a>{% endif %}
+{% endblock %}
+
+{% block content %}
+    {% if not swipes|length %}
+        <p class="notice">No swipes found.</p>
+    {% endif %}
+    {% for swipe in swipes %}
+        {% include 'swipe/swipe.twig' %}
+    {% endfor %}
+{% endblock %}

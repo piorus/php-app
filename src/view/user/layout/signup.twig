@@ -1,8 +1,8 @@
 {% extends "layout/baseLayout.twig" %}
 
 {% block content %}
-        {% include 'form/login.twig' %}
-        <p>No account? <a href="/signup">Sign Up</a></p>
+    {% include 'user/signupForm.twig' %}
+    <div class="signIn">Already have account? <a href="/login">Sign In</a></div>
 {% endblock %}
 
 {% block styles %}
