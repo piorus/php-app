@@ -5,9 +5,8 @@ namespace Database\Search;
 
 class SearchCriteriaBuilder
 {
-    private $searchCriteria;
-    /** @var FilterGroup|null */
-    private $currentFilterGroup = null;
+    private SearchCriteria $searchCriteria;
+    private ?FilterGroup $currentFilterGroup = null;
 
     public function __construct()
     {

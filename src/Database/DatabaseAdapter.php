@@ -9,8 +9,7 @@ use Service\ConvertToSnakeCase;
 
 class DatabaseAdapter implements AdapterInterface
 {
-    /** @var \PDO */
-    private $pdo;
+    private \PDO $pdo;
 
     public function __construct()
     {
@@ -71,7 +70,13 @@ class DatabaseAdapter implements AdapterInterface
         ];
     }
 
-    private function buildSelectStatement(array $columns, string $table, SearchCriteriaInterface $searchCriteria): \PDOStatement
+    private function buildAndExecuteFetchStatement(
+        string $fetchMethod,
+        array $columns,
+        string $table,
+        SearchCriteriaInterface $searchCriteria,
+        int $fetchStyle = \PDO::FETCH_ASSOC
+    ): ?array
     {
         $gluedColumns = implode(', ', $columns);
         $conditions = $this->buildWhereClause($searchCriteria);
@@ -90,35 +95,36 @@ class DatabaseAdapter implements AdapterInterface
 
         $statement->execute();
 
-        return $statement;
-    }
+        $result = $statement->$fetchMethod($fetchStyle);
 
-    private function checkErrors(bool $hasResult)
-    {
-        if (!$hasResult && $this->pdo->errorCode() !== '00000') {
+        if (!(bool)$result && $this->pdo->errorCode() !== '00000') {
             throw new DatabaseException(implode(';', $this->pdo->errorInfo()));
         }
-    }
-
-    public function fetch(array $columns, string $table, SearchCriteriaInterface $searchCriteria, int $fetchStyle = \PDO::FETCH_ASSOC): ?array
-    {
-        $statement = $this->buildSelectStatement($columns, $table, $searchCriteria);
-        $result = $statement->fetch($fetchStyle);
-        $this->checkErrors((bool)$result);
 
         return $result !== false ? $result : null;
     }
 
-    public function fetchAll(array $columns, string $table, SearchCriteriaInterface $searchCriteria, int $fetchStyle = \PDO::FETCH_ASSOC)
+    public function fetch(
+        array $columns,
+        string $table,
+        SearchCriteriaInterface $searchCriteria,
+        int $fetchStyle = \PDO::FETCH_ASSOC
+    ): ?array
     {
-        $statement = $this->buildSelectStatement($columns, $table, $searchCriteria);
-        $result = $statement->fetchAll($fetchStyle);
-        $this->checkErrors((bool)$result);
-
-        return $result !== false ? $result : null;
+        return $this->buildAndExecuteFetchStatement('fetch', $columns, $table, $searchCriteria, $fetchStyle);
     }
 
-    private function prepareColumns(array $columns)
+    public function fetchAll(
+        array $columns,
+        string $table,
+        SearchCriteriaInterface $searchCriteria,
+        int $fetchStyle = \PDO::FETCH_ASSOC
+    ): ?array
+    {
+        return $this->buildAndExecuteFetchStatement('fetchAll', $columns, $table, $searchCriteria, $fetchStyle);
+    }
+
+    private function prepareColumns(array $columns): array
     {
         $params = [];
         $parsedColumns = [];
@@ -147,18 +153,23 @@ class DatabaseAdapter implements AdapterInterface
         ];
     }
 
-    public function insert(string $table, array $columns)
+    public function insert(string $table, array $columns) : ?int
     {
         $columns = $this->prepareColumns($columns);
         $gluedColumns = implode(',', array_keys($columns['columns']));
         $gluedParameters = implode(',', array_column($columns['params'], 'parameter'));
-        $statement = $this->pdo->prepare("INSERT INTO \"$table\" ($gluedColumns) VALUES ($gluedParameters)");
+
+        $statement = $this->pdo->prepare("INSERT INTO \"$table\" ($gluedColumns) VALUES ($gluedParameters) RETURNING id;");
 
         foreach ($columns['params'] as $bind) {
             $statement->bindParam($bind['parameter'], $bind['value'], $bind['dataType']);
         }
 
+        $this->pdo->beginTransaction();
         $statement->execute();
+        $this->pdo->commit();
+
+        return $statement->fetch(\PDO::FETCH_ASSOC)['id'] ?? null;
     }
 
     public function update(string $table, SearchCriteriaInterface $searchCriteria, array $columns)
@@ -166,7 +177,7 @@ class DatabaseAdapter implements AdapterInterface
         $columns = $this->prepareColumns($columns);
         $setClauses = [];
 
-        foreach($columns['params'] as $bind) {
+        foreach ($columns['params'] as $bind) {
             $setClauses[] = "{$bind['column']} = {$bind['parameter']}";
         }
 
@@ -174,7 +185,7 @@ class DatabaseAdapter implements AdapterInterface
         $whereClause = $this->buildWhereClause($searchCriteria);
         $sql = "UPDATE \"$table\" SET $setClause";
 
-        if($whereClause['where']) {
+        if ($whereClause['where']) {
             $sql .= " WHERE {$whereClause['where']}";
         }
 
@@ -188,8 +199,9 @@ class DatabaseAdapter implements AdapterInterface
             $statement->bindParam($bind['parameter'], $bind['value'], $bind['dataType']);
         }
 
+        $this->pdo->beginTransaction();
         $statement->execute();
-
+        $this->pdo->commit();
     }
 
     public function delete(string $table, SearchCriteriaInterface $searchCriteria)
@@ -207,10 +219,12 @@ class DatabaseAdapter implements AdapterInterface
             $statement->bindParam($bind['parameter'], $bind['value'], $bind['dataType']);
         }
 
+        $this->pdo->beginTransaction();
         $statement->execute();
+        $this->pdo->commit();
     }
 
-    private function convertToDataType($value)
+    private function convertToDataType($value): int
     {
         if (is_bool($value)) {
             return \PDO::PARAM_BOOL;

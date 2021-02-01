@@ -25,7 +25,7 @@ class Session
         $_SESSION[$key] = $value;
     }
 
-    public function has(string $key)
+    public function has(string $key) : bool
     {
         return isset($_SESSION[$key]);
     }
@@ -49,7 +49,7 @@ class Session
         return $userRepository->get($this->get(self::KEY_USER_ID));
     }
 
-    public function isLoggedIn()
+    public function isLoggedIn(): bool
     {
         return $this->has(self::KEY_USER_ID);
     }

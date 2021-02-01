@@ -5,10 +5,8 @@ namespace Database\Search;
 
 class FilterGroup implements FilterGroupInterface
 {
-    /** @var array */
-    private $filters = [];
-    /** @var string */
-    private $concatenation;
+    private array $filters = [];
+    private string $concatenation;
 
     public function addFilter(FilterInterface $filter): FilterGroupInterface
     {

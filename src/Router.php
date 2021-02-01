@@ -12,12 +12,12 @@ class Router
     const GET_REQUEST = 'GET';
     const POST_REQUEST = 'POST';
 
-    private $routes = [
+    private array $routes = [
         self::GET_REQUEST => [],
         self::POST_REQUEST => []
     ];
 
-    private function getActions()
+    private function getActions(): array
     {
         return [
             self::GET_REQUEST => GetActionInterface::class,

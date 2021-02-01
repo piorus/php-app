@@ -8,5 +8,7 @@ use Controller\Action\AbstractFrontendController;
 class Create extends AbstractFrontendController
 {
     const REQUIRE_LOGGED_IN_ADMIN_USER = true;
-    protected $template = 'author/create.twig';
+
+    protected string $template = 'author/layout/create.twig';
+    protected string $pageTitle = 'Add New Author';
 }

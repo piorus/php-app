@@ -3,8 +3,7 @@ declare(strict_types=1);
 
 class Request
 {
-    /** @var array */
-    private $data = [];
+    private array $data = [];
 
     public function __construct(string $method)
     {
@@ -16,12 +15,12 @@ class Request
         return $this->data[$key] ?? $default;
     }
 
-    public function has(string $key)
+    public function has(string $key): bool
     {
         return isset($this->data[$key]);
     }
 
-    public function getAll()
+    public function getAll(): array
     {
         return $this->data;
     }

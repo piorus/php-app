@@ -8,7 +8,7 @@ use Factory\RepositoryFactory;
 use Repository\UserRepository;
 use Service\Hasher;
 
-class LoginFormSubmit extends AbstractBackendController
+class LoginSubmit extends AbstractBackendController
 {
     protected function executeBackendAction()
     {

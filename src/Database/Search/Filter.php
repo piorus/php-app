@@ -5,14 +5,10 @@ namespace Database\Search;
 
 class Filter implements FilterInterface
 {
-    /** @var string */
-    private $field;
-    /** @var mixed */
-    private $value;
-    /** @var string */
-    private $conditionType;
-    /** @var string */
-    private $concatenation;
+    private ?string $field;
+    protected $value;
+    private string $conditionType;
+    private string $concatenation;
 
     public function __construct(string $field = null, $value = null, string $conditionType = '=', string $concatenation = 'AND')
     {

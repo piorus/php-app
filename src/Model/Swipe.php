@@ -3,8 +3,10 @@ declare(strict_types=1);
 
 namespace Model;
 
+use Database\Search\SearchCriteriaBuilder;
 use Factory\RepositoryFactory;
 use Repository\AuthorRepository;
+use Repository\SwipeCommentRepository;
 
 /**
  * @method setName(string $name)
@@ -16,9 +18,9 @@ class Swipe extends AbstractEntity
 {
     const ENTITY = 'swipe';
 
-    protected $name;
-    protected $authorId;
-    protected $fileUrl;
+    protected string $name;
+    protected int $authorId;
+    protected string $fileUrl;
 
     public function getAuthor() : ?Author
     {
@@ -28,11 +30,24 @@ class Swipe extends AbstractEntity
         return $authorRepository->get($this->authorId);
     }
 
-    public function getName() {
+    public function getName() : string {
         return $this->name;
     }
 
-    public function getFileUrl() {
+    public function getFileUrl() : string {
         return $this->fileUrl;
+    }
+
+    /**
+     * @return SwipeComment[]
+     */
+    public function getSwipeComments() : array
+    {
+        /** @var SwipeCommentRepository $swipeCommentRepository */
+        $swipeCommentRepository = RepositoryFactory::create(SwipeCommentRepository::class);
+        $builder = new SearchCriteriaBuilder();
+        $builder->addFilter('swipe_id', $this->id);
+
+        return $swipeCommentRepository->getList($builder->build());
     }
 }

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Controller\Action;
 
+use Factory\EntityFactory;
 use Factory\RepositoryFactory;
 use Model\EntityInterface;
 
@@ -10,12 +11,9 @@ class AbstractFormSubmitController extends AbstractBackendController
 {
     const REQUIRE_LOGGED_IN_ADMIN_USER = true;
 
-    /** @var string|null */
-    protected $entityClass = null;
-    /** @var string|null */
-    protected $repositoryClass = null;
-    /** @var string */
-    protected $redirectPath = '';
+    protected ?string $entityClass = null;
+    protected ?string $repositoryClass = null;
+    protected string $redirectPath = '';
 
     protected function beforeSave(EntityInterface $entity)
     {
@@ -28,9 +26,9 @@ class AbstractFormSubmitController extends AbstractBackendController
 
     protected function executeBackendAction()
     {
-        $entity = new $this->entityClass($this->request->getAll());
-        /** @var \Repository\RepositoryInterface $repository */
+        $entity = EntityFactory::create($this->entityClass, $this->request->getAll());
         $repository = RepositoryFactory::create($this->repositoryClass);
+
         $this->beforeSave($entity);
         $repository->save($entity);
         $this->afterSave($entity);

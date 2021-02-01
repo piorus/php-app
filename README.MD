@@ -1,7 +1,6 @@
-composer require symfony/dependency-injection symfony/yaml symfony/config
+### Prerequisites
 
-sudo apt install php7.3-pgsql
-
-composer require symfony/console
-
-sudo apt-get install libargon2-dev
+* PHP 7.4+
+* composer
+* php7.4-pgsql
+* libargon2-dev

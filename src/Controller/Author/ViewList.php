@@ -9,9 +9,8 @@ use Repository\AuthorRepository;
 
 class ViewList extends AbstractViewListController
 {
-    protected $template = 'author/list.twig';
-    /** @var string|null */
-    protected $repositoryClass = AuthorRepository::class;
-    /** @var string|null */
-    protected $entity = Author::ENTITY;
+    protected string $template = 'author/layout/list.twig';
+    protected ?string $repositoryClass = AuthorRepository::class;
+    protected ?string $entity = Author::ENTITY;
+    protected string $pageTitle = 'Authors';
 }

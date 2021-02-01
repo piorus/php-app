@@ -8,5 +8,5 @@ use Controller\Action\GetActionInterface;
 
 class Signup extends AbstractFrontendController implements GetActionInterface
 {
-    protected $template = 'user/signup.twig';
+    protected string $template = 'user/layout/signup.twig';
 }

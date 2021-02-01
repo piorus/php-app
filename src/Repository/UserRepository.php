@@ -5,9 +5,10 @@ namespace Repository;
 
 use Database\AdapterInterface;
 use Database\Search\SearchCriteriaBuilder;
+use Database\Search\SearchCriteriaInterface;
 use Exception\UserAlreadyExistException;
 use Exception\UserNicknameIsAlreadyInUseException;
-use Factory\ServiceFactory;
+use Factory\EntityFactory;
 use Model\User;
 use Service\Hasher;
 
@@ -16,36 +17,44 @@ class UserRepository extends AbstractRepository
     public function __construct(
         AdapterInterface $adapter,
         string $tableName = 'user',
-        string $modelClass = '\\Model\\User'
+        string $modelClass = User::class
     )
     {
         parent::__construct($adapter, $tableName, $modelClass);
     }
 
+    private function getUserBy(SearchCriteriaInterface $searchCriteria) : ?User
+    {
+        $data = $this->adapter->fetch(
+            ['*'],
+            $this->tableName,
+            $searchCriteria
+        );
+
+        if(!$data) {
+            return null;
+        }
+
+        /** @var User $user */
+        $user = EntityFactory::create(User::class, $data);
+
+        return $user;
+    }
+
     public function getUserByEmail(string $email): ?User
     {
         $builder = new SearchCriteriaBuilder();
+        $builder->addFilter('email', $email);
 
-        $result = $this->adapter->fetch(
-            ['*'],
-            $this->tableName,
-            $builder->addFilter('email', $email)->build()
-        );
-
-        return $result ? new User($result) : null;
+        return $this->getUserBy($builder->build());
     }
 
     public function getUserByNickname(string $nickname) : ?User
     {
         $builder = new SearchCriteriaBuilder();
+        $builder->addFilter('nickname', $nickname);
 
-        $result = $this->adapter->fetch(
-            ['*'],
-            $this->tableName,
-            $builder->addFilter('nickname', $nickname)->build()
-        );
-
-        return $result ? new User($result) : null;
+        return $this->getUserBy($builder->build());
     }
 
     public function create(string $nickname, string $email, string $password)
@@ -61,7 +70,6 @@ class UserRepository extends AbstractRepository
             throw new UserNicknameIsAlreadyInUseException('This nickname was already taken.');
         }
 
-        /** @var Hasher $hasher */
         $hasher = new Hasher();
 
         $this->adapter->insert(

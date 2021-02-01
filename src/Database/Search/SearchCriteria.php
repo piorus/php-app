@@ -6,7 +6,7 @@ namespace Database\Search;
 class SearchCriteria implements SearchCriteriaInterface
 {
     /** @var FilterGroup[] */
-    private $filterGroups = [];
+    private array $filterGroups = [];
 
     public function addFilterGroup(FilterGroupInterface $filterGroup) : SearchCriteriaInterface
     {

@@ -5,7 +5,7 @@ namespace Service;
 
 class Serializer
 {
-    public function serialize($data)
+    public function serialize($data): string
     {
         return json_encode($data);
     }

@@ -9,9 +9,8 @@ use Repository\SwipeRepository;
 
 class ViewList extends AbstractViewListController
 {
-    protected $template = 'swipe/list.twig';
-    /** @var string|null */
-    protected $repositoryClass = SwipeRepository::class;
-    /** @var string|null */
-    protected $entity = Swipe::ENTITY;
+    protected string $template = 'swipe/layout/list.twig';
+    protected ?string $repositoryClass = SwipeRepository::class;
+    protected ?string $entity = Swipe::ENTITY;
+    protected string $pageTitle = 'Swipes';
 }

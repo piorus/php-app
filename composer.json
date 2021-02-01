@@ -12,10 +12,9 @@
     "slevomat/coding-standard": "^6.4",
     "squizlabs/php_codesniffer": "*",
     "ext-pdo": "*",
-    "symfony/dependency-injection": "^5.2",
     "symfony/config": "^5.2",
     "symfony/yaml": "^5.2",
-    "symfony/console": "^5.2"
+    "ext-json": "*"
   },
   "autoload": {
     "psr-0": {

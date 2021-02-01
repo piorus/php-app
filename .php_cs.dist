@@ -1,6 +1,6 @@
 <?php
 $finder = PhpCsFixer\Finder::create()
-    ->name('*.phtml')
+    ->name('*.twig')
     ->exclude('pub')
     ->exclude('cache');
 

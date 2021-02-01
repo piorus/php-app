@@ -6,4 +6,5 @@ namespace Model;
 interface EntityInterface
 {
     public function getValues() : array;
+    public function getId() : ?int;
 }

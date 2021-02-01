@@ -10,8 +10,6 @@ class Delete extends AbstractDeleteController
 {
     const REQUIRE_LOGGED_IN_ADMIN_USER = true;
 
-    /** @var string|null */
-    protected $repositoryClass = SwipeRepository::class;
-    /** @var string|null */
-    protected $redirectPath = '/';
+    protected ?string $repositoryClass = SwipeRepository::class;
+    protected ?string $redirectPath = '/';
 }

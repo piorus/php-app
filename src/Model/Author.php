@@ -7,23 +7,13 @@ class Author extends AbstractEntity
 {
     const ENTITY = 'author';
 
-    protected $firstName;
-    protected $lastName;
-    protected $bio;
-
-    public function getId() : int
-    {
-        return $this->id;
-    }
+    protected string $firstName;
+    protected string $lastName;
+    protected string $bio;
 
     public function getFirstName() : string
     {
         return $this->firstName;
-    }
-
-    public function setFirstName($firstName): void
-    {
-        $this->firstName = $firstName;
     }
 
     public function getLastName() :string
@@ -31,18 +21,8 @@ class Author extends AbstractEntity
         return $this->lastName;
     }
 
-    public function setLastName($lastName): void
-    {
-        $this->lastName = $lastName;
-    }
-
     public function getBio() : string
     {
         return $this->bio;
-    }
-
-    public function setBio($bio): void
-    {
-        $this->bio = $bio;
     }
 }

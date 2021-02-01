@@ -10,7 +10,7 @@ class ControllerFactory
     public static function create(string $controllerClass, string $requestMethod) : ActionInterface
     {
         return new $controllerClass(
-            new \Session(),
+            SessionFactory::create(),
             RequestFactory::create($requestMethod)
         );
     }

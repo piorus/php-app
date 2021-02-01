@@ -13,7 +13,8 @@ class Create extends AbstractFrontendController implements GetActionInterface
 {
     public const REQUIRE_LOGGED_IN_ADMIN_USER = true;
 
-    protected $template = 'swipe/create.twig';
+    protected string $template = 'swipe/layout/create.twig';
+    protected string $pageTitle = 'Add New Swipe';
 
     public function getTemplateData(): array
     {

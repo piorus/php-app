@@ -9,9 +9,9 @@ use Repository\UserRepository;
 class SwipeComment extends AbstractEntity
 {
     const ENTITY = 'swipe_comment';
-    protected $userId;
-    protected $swipeId;
-    protected $comment;
+    protected int $userId;
+    protected int $swipeId;
+    protected string $comment;
 
     public function getUser() : User
     {
@@ -19,5 +19,10 @@ class SwipeComment extends AbstractEntity
         $userRepository = RepositoryFactory::create(UserRepository::class);
 
         return $userRepository->get($this->userId);
+    }
+
+    public function getUserId() : int
+    {
+        return $this->userId;
     }
 }

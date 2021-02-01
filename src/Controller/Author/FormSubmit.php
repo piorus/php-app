@@ -3,21 +3,13 @@ declare(strict_types=1);
 
 namespace Controller\Author;
 
-use Controller\Action\AbstractBackendController;
-use Factory\RepositoryFactory;
+use Controller\Action\AbstractFormSubmitController;
 use Model\Author;
 use Repository\AuthorRepository;
 
-class FormSubmit extends AbstractBackendController
+class FormSubmit extends AbstractFormSubmitController
 {
-    const REQUIRE_LOGGED_IN_ADMIN_USER = true;
-
-    public function executeBackendAction()
-    {
-        $author = new Author($this->request->getAll());
-        /** @var AuthorRepository $authorRepository */
-        $authorRepository = RepositoryFactory::create(AuthorRepository::class);
-        $authorRepository->save($author);
-        $this->redirect('/authors');
-    }
+    protected ?string $entityClass = Author::class;
+    protected ?string $repositoryClass = AuthorRepository::class;
+    protected string $redirectPath = '/authors';
 }

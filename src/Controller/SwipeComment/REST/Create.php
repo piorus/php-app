@@ -11,7 +11,9 @@ use Repository\SwipeCommentRepository;
 
 class Create extends AbstractRESTController implements PostActionInterface
 {
-    public function executeRESTAction()
+    const REQUIRE_LOGGED_IN_USER = true;
+
+    public function executeRESTAction(): string
     {
         $swipeId = $this->request->get('swipeId');
         $comment = $this->request->get('comment');
@@ -25,12 +27,15 @@ class Create extends AbstractRESTController implements PostActionInterface
 
         /** @var SwipeCommentRepository $swipeCommentRepository */
         $swipeCommentRepository = RepositoryFactory::create(SwipeCommentRepository::class);
-        $swipeCommentRepository->save($swipeComment);
+        $commentId = $swipeCommentRepository->save($swipeComment);
+        $swipeComment->setId($commentId);
 
-        return $this->serializer->serialize([
-            'success' => true,
-            'message' => 'Comment added successfully.',
-            'commentId' =>1
+        $html = $this->twig->render('swipecomment/swipecomment.twig', [
+            'isAdmin' => $this->session->getUser()->isAdmin(),
+            'loggedInUserId' => $this->session->getUser()->getId(),
+            'comment' => $swipeComment
         ]);
+
+        return $this->response($html);
     }
 }

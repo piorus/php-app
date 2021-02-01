@@ -12,11 +12,9 @@ use Repository\SwipeRepository;
 
 class ViewSingle extends AbstractViewSingleController
 {
-    protected $template = 'swipe/single.twig';
-    /** @var string|null */
-    protected $repositoryClass = SwipeRepository::class;
-    /** @var string|null */
-    protected $entity = Swipe::ENTITY;
+    protected string $template = 'swipe/layout/single.twig';
+    protected ?string $repositoryClass = SwipeRepository::class;
+    protected ?string $entity = Swipe::ENTITY;
 
     public function getTemplateData(): array
     {

@@ -4,24 +4,37 @@ declare(strict_types=1);
 namespace Model;
 
 /**
- * @method int|null getId()
+ * @method setId(int $id)
  */
 class AbstractEntity implements EntityInterface
 {
     const ENTITY = null;
 
-    /** @var int */
-    protected $id;
+    protected ?int $id = null;
 
     public function __construct(array $data)
     {
         foreach ($data as $key => $value) {
             if (property_exists($this, $key)) {
-                $this->$key = $value;
+                $property = new \ReflectionProperty($this, $key);
+                $this->$key = $this->convertType(
+                    $property->getType()->getName(),
+                    $value
+                );
             }
         }
+    }
 
-        $this->id = (int)$this->id;
+    private function convertType(string $type, $value)
+    {
+        switch ($type) {
+            case 'int':
+                return (int) $value;
+            case 'float':
+                return (float) $value;
+            default:
+                return $value;
+        }
     }
 
     public function __call(string $name, array $arguments)
@@ -38,6 +51,11 @@ class AbstractEntity implements EntityInterface
         }
 
         return null;
+    }
+
+    public function getId() : ?int
+    {
+        return $this->id;
     }
 
     public function getValues(): array

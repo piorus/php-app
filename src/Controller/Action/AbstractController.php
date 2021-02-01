@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Controller\Action;
 
+use Validation\ValidationResult;
+
 abstract class AbstractController
 {
     const REQUIRE_LOGGED_IN_USER = false;
@@ -12,10 +14,8 @@ abstract class AbstractController
     const ACTION_RETURN_BOOLEAN = 'return_boolean';
     const ACTION_RETURN_VALIDATION_RESULT = 'return_validation_result';
 
-    /** @var \Session */
-    protected $session;
-    /** @var \Request */
-    protected $request;
+    protected \Session $session;
+    protected \Request $request;
 
     public function __construct(\Session $session, \Request $request)
     {
@@ -37,7 +37,7 @@ abstract class AbstractController
                 $this->redirect($redirectPath);
                 break;
             case self::ACTION_RETURN_VALIDATION_RESULT:
-                return new \Validation\ValidationResult(false, $message);
+                return new ValidationResult(false, $message);
             case self::ACTION_RETURN_BOOLEAN:
                 return false;
         }
@@ -45,6 +45,10 @@ abstract class AbstractController
         return false;
     }
 
+    /**
+     * @param string $action
+     * @return ValidationResult|bool
+     */
     protected function validatePermissions(string $action = self::ACTION_RETURN_BOOLEAN)
     {
         if (

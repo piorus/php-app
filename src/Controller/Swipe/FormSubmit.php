@@ -15,21 +15,25 @@ class FormSubmit extends AbstractFormSubmitController
 {
     const UPLOAD_DIR = 'swipes';
 
-    /** @var string|null */
-    protected $entityClass = Swipe::class;
-    /** @var string|null */
-    protected $repositoryClass = SwipeRepository::class;
-    /** @var string */
-    protected $redirectPath = '/swipes';
+    protected ?string $entityClass = Swipe::class;
+    protected ?string $repositoryClass = SwipeRepository::class;
+    protected string $redirectPath = '/swipes';
 
-    /** @var Swipe $entity */
+    /** @param Swipe $swipe */
     public function beforeSave(EntityInterface $swipe)
     {
         $uploader = new FileUpload();
 
+        $file = $this->request->getFile('file');
+
+        // bail early if swipe already exist and no file was added
+        if($swipe->getId() && empty($file['type'])) {
+            return;
+        }
+
         try {
             $filePath = $uploader->execute(
-                $this->request->getFile('file'),
+                $file,
                 self::UPLOAD_DIR
             );
         } catch (FileUploadException $e) {

@@ -9,8 +9,7 @@ use Repository\AuthorRepository;
 class Delete extends AbstractDeleteController
 {
     const REQUIRE_LOGGED_IN_ADMIN_USER = true;
-    /** @var string|null */
-    protected $repositoryClass = AuthorRepository::class;
-    /** @var string|null */
-    protected $redirectPath = '/authors';
+
+    protected ?string $repositoryClass = AuthorRepository::class;
+    protected ?string $redirectPath = '/authors';
 }

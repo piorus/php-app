@@ -6,7 +6,7 @@ namespace Controller\User;
 use Controller\Action\AbstractFrontendController;
 use Controller\Action\GetActionInterface;
 
-class LoginForm extends AbstractFrontendController implements GetActionInterface
+class Login extends AbstractFrontendController implements GetActionInterface
 {
     const REQUIRE_LOGGED_IN_USER = false;
 

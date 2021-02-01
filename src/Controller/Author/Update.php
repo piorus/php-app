@@ -11,7 +11,8 @@ class Update extends AbstractUpdateController
 {
     const REQUIRE_LOGGED_IN_ADMIN_USER = true;
 
-    protected $template = 'author/update.twig';
-    protected $repositoryClass = AuthorRepository::class;
-    protected $entity = Author::ENTITY;
+    protected string $template = 'author/layout/update.twig';
+    protected ?string $repositoryClass = AuthorRepository::class;
+    protected ?string $entity = Author::ENTITY;
+    protected string $pageTitle = 'Update Author';
 }

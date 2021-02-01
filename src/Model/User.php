@@ -12,17 +12,23 @@ class User extends AbstractEntity
 
     const COLUMN_ID = 'id';
 
-    /** @var string */
-    protected $nickname;
-    /** @var string */
-    protected $email;
-    /** @var string */
-    protected $password;
-    /** @var string */
-    protected $role;
+    protected string $nickname;
+    protected string $email;
+    protected string $password;
+    protected string $role;
 
     public function isAdmin()
     {
         return $this->role === 'ADMIN';
+    }
+
+    public function getNickname() : string
+    {
+        return $this->nickname;
+    }
+
+    public function getEmail(): string
+    {
+        return $this->email;
     }
 }
